@@ -1,0 +1,95 @@
+import Head from 'next/head'
+
+export default function Home() {
+  return (
+    <div>
+      <Head>
+        <title>Conveyor Belt System</title>
+        <meta name="description" content="Conveyor belt system" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <h1>Conveyor Belt System</h1>
+
+      <h2>Conveyor Belt 1 (CB1)</h2>
+      <p>Speed: <span id="cb1Speed">1</span> boxes/sec</p>
+      <div className="conveyor">
+        <div className="belt" id="cb1Belt"></div>
+      </div>
+      <div className="button-group">
+        {[1, 2, 3, 4, 5].map((speed) => (
+          <button key={speed} onClick={() => setSpeed('cb1', speed)}>
+            {speed}x
+          </button>
+        ))}
+      </div>
+
+      <h2>Stack</h2>
+      <p>Count: <span id="stackCount">0</span></p>
+      <div className="stack-container" id="stack"></div>
+
+      <h2>Conveyor Belt 2 (CB2)</h2>
+      <p>Speed: <span id="cb2Speed">1</span> boxes/sec</p>
+      <div className="conveyor">
+        <div className="belt" id="cb2Belt"></div>
+      </div>
+      <div className="button-group">
+        {[1, 2, 3, 4, 5].map((speed) => (
+          <button key={speed} onClick={() => setSpeed('cb2', speed)}>
+            {speed}x
+          </button>
+        ))}
+      </div>
+
+      <h3>Removal Method</h3>
+      <div className="button-group">
+        <button onClick={() => setRemovalMethod('top')}>Remove Top</button>
+        <button onClick={() => setRemovalMethod('bottom')}>Remove Bottom</button>
+      </div>
+
+      <style jsx>{`
+        .conveyor {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 20px 0;
+        }
+        .belt {
+          width: 300px;
+          height: 20px;
+          background: gray;
+          position: relative;
+          overflow: hidden;
+        }
+        .box {
+          width: 20px;
+          height: 20px;
+          background: red;
+          position: absolute;
+          left: 0;
+          transition: transform 0.5s linear;
+        }
+        .stack-container {
+          width: 50px;
+          min-height: 100px;
+          border: 2px solid black;
+          margin: 10px;
+          display: flex;
+          flex-direction: column-reverse;
+          align-items: center;
+          padding: 5px;
+        }
+        .button-group {
+          margin-top: 10px;
+        }
+        button {
+          padding: 5px 10px;
+          margin: 5px;
+          cursor: pointer;
+        }
+      `}</style>
+
+      <script src="/conveyor.js"></script>
+    </div>
+  )
+}

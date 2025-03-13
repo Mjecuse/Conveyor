@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conveyor Belt System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .conveyor {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .belt {
+            width: 300px;
+            height: 20px;
+            background: gray;
+            position: relative;
+            overflow: hidden;
+        }
+        .box {
+            width: 20px;
+            height: 20px;
+            background: red;
+            position: absolute;
+            left: 0;
+            transition: transform 0.5s linear;
+        }
+        .stack-container {
+            width: 50px;
+            min-height: 100px;
+            border: 2px solid black;
+            margin: 10px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Conveyor Belt 1 (CB1)</h2>
+    <p>Speed: <span id="cb1Speed">1</span> boxes/sec</p>
+    <div class="conveyor">
+        <div class="belt" id="cb1Belt"></div>
+    </div>
+    <button onclick="setSpeed('cb1', 1)">1x</button>
+    <button onclick="setSpeed('cb1', 2)">2x</button>
+    <button onclick="setSpeed('cb1', 3)">3x</button>
+    <button onclick="setSpeed('cb1', 4)">4x</button>
+    <button onclick="setSpeed('cb1', 5)">5x</button>
+
+    <h2>Stack</h2>
+    <p>Count: <span id="stackCount">0</span></p>
+    <div class="stack-container" id="stack"></div>
+
+    <h2>Conveyor Belt 2 (CB2)</h2>
+    <p>Speed: <span id="cb2Speed">1</span> boxes/sec</p>
+    <div class="conveyor">
+        <div class="belt" id="cb2Belt"></div>
+    </div>
+    <button onclick="setSpeed('cb2', 1)">1x</button>
+    <button onclick="setSpeed('cb2', 2)">2x</button>
+    <button onclick="setSpeed('cb2', 3)">3x</button>
+    <button onclick="setSpeed('cb2', 4)">4x</button>
+    <button onclick="setSpeed('cb2', 5)">5x</button>
+
+    <h3>Removal Method</h3>
+    <button onclick="setRemovalMethod('top')">Remove Top</button>
+    <button onclick="setRemovalMethod('bottom')">Remove Bottom</button>
+
+    <script>
+        let cb1Speed = 1, cb2Speed = 1;
+        let stack = [];
+        let removalMethod = "top";
+
+        function setSpeed(belt, speed) {
+            if (belt === 'cb1') {
+                cb1Speed = speed;
+                document.getElementById("cb1Speed").innerText = speed;
+            } else {
+                cb2Speed = speed;
+                document.getElementById("cb2Speed").innerText = speed;
+            }
+        }
+
+        function setRemovalMethod(method) {
+            removalMethod = method;
+        }
+
+        function addBox() {
+            let box = document.createElement("div");
+            box.className = "box";
+            document.getElementById("cb1Belt").appendChild(box);
+            setTimeout(() => {
+                box.style.transform = "translateX(280px)";
+                setTimeout(() => {
+                    document.getElementById("cb1Belt").removeChild(box);
+                    stack.push(box);
+                    updateStack();
+                }, 500);
+            }, 100);
+        }
+
+        function removeBox() {
+            if (stack.length === 0) return;
+            let boxToRemove = removalMethod === "top" ? stack.pop() : stack.shift();
+            if (boxToRemove) {
+                document.getElementById("stack").removeChild(boxToRemove);
+            }
+            updateStack();
+        }
+
+        function updateStack() {
+            document.getElementById("stackCount").innerText = stack.length;
+            let stackContainer = document.getElementById("stack");
+            stackContainer.innerHTML = "";
+            stack.forEach(() => {
+                let stackedBox = document.createElement("div");
+                stackedBox.className = "box";
+                stackContainer.appendChild(stackedBox);
+            });
+        }
+
+        setInterval(() => {
+            addBox();
+        }, 1000 / cb1Speed);
+
+        setInterval(() => {
+            removeBox();
+        }, 1000 / cb2Speed);
+
+    </script>
+
+</body>
+</html>
